@@ -17,12 +17,15 @@ btnStartEl.addEventListener('click', () => {
   intervalId = setInterval(() => {
     bodyEl.style.backgroundColor = `${getRandomHexColor()}`;
     console.log('Поточний колір фону:', bodyEl.style.backgroundColor);
-    console.log(intervalId);
+    console.log('Ідентифікатор інтервалу:', intervalId);
   }, 1000);
   console.log('Функція зміни кольору ввімкнена:', isActiveColorChange);
 });
 
 btnStopEl.addEventListener('click', () => {
+  if (!isActiveColorChange) {
+    return;
+  }
   clearInterval(intervalId);
   isActiveColorChange = false;
   console.warn('Функція зміни кольору ввімкнена:', isActiveColorChange);
