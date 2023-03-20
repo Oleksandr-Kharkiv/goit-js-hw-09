@@ -26,6 +26,7 @@ const options = {
             btnStartEl.disabled = true;
             const deltaTime = selectedDates[0] - new Date();
             if(deltaTime <= 0){
+                Notiflix.Report.success('От і все', 'Чекайте наступних стартів', 'Дякуємо, що були з нами');
                 clearInterval(intervalId)
                 return
             }
