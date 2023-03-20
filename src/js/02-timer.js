@@ -1,4 +1,5 @@
 import flatpickr from "flatpickr";
+import Notiflix from 'notiflix';
 import "flatpickr/dist/flatpickr.min.css"
 
 const daysEl = document.querySelector('span[data-days]');
@@ -16,7 +17,7 @@ const options = {
     minuteIncrement: 1,
     onClose(selectedDates) {
         if(new Date() > selectedDates[0]){
-            alert("Please choose a date in the future");
+            Notiflix.Notify.failure('Please choose a date in the future');
             return
         }
         btnStartEl.disabled = false;
@@ -28,8 +29,7 @@ const options = {
                 clearInterval(intervalId)
                 return
             }
-            const newFormatTime = convertMs(deltaTime);
-            tablo(newFormatTime);
+            tablo(convertMs(deltaTime));
         }, 1000)}
         )
     },};
