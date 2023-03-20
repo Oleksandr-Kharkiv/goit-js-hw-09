@@ -5,41 +5,38 @@ const daysEl = document.querySelector('span[data-days]');
 const hoursEl = document.querySelector('span[data-hours]');
 const minutesEl = document.querySelector('span[data-minutes]');
 const secondsEl = document.querySelector('span[data-seconds]');
+const calendarEl = document.querySelector('input#datetime-picker');
 const btnStartEl = document.querySelector('button[data-start]');
 btnStartEl.disabled = true;
 
-console.log(btnStartEl)
 const options = {
     enableTime: true,
     time_24hr: true,
     defaultDate: new Date(),
     minuteIncrement: 1,
-    // intervalId: null,
     onClose(selectedDates) {
-        const finishTime = selectedDates[0];
-        const startTime = new Date();
-            if(finishTime < startTime){
-                alert("Please choose a date in the future");
-                return
-            }
+        if(new Date() > selectedDates[0]){
+            alert("Please choose a date in the future");
+            return
+        }
         btnStartEl.disabled = false;
         btnStartEl.addEventListener('click', () => {
         const intervalId = setInterval(() => {
             btnStartEl.disabled = true;
-            const currentTime = new Date();
-            const deltaTime = finishTime - currentTime;
+            const deltaTime = selectedDates[0] - new Date();
             if(deltaTime <= 0){
                 clearInterval(intervalId)
                 return
             }
             const newFormatTime = convertMs(deltaTime);
             tablo(newFormatTime);
-            console.log(deltaTime)
-        }, 1000)})},};
+        }, 1000)}
+        )
+    },};
     
-flatpickr("input#datetime-picker", options);
+flatpickr(calendarEl, options);
 
-function pad(value){
+function addLeadingZero(value){
     return String(value).padStart(2, '0');
 }
 
@@ -50,13 +47,13 @@ function convertMs(ms) {
     const hour = minute * 60;
     const day = hour * 24;
     // Remaining days
-    const days = pad(Math.floor(ms / day));
+    const days = addLeadingZero(Math.floor(ms / day));
     // Remaining hours
-    const hours = pad(Math.floor((ms % day) / hour));
+    const hours = addLeadingZero(Math.floor((ms % day) / hour));
     // Remaining minutes
-    const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+    const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
     // Remaining seconds
-    const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+    const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
     return { days, hours, minutes, seconds };
 }
 
