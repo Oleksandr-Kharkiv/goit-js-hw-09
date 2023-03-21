@@ -9,7 +9,7 @@ const secondsEl = document.querySelector('span[data-seconds]');
 const calendarEl = document.querySelector('input#datetime-picker');
 const btnStartEl = document.querySelector('button[data-start]');
 btnStartEl.disabled = true;
-
+let chosenTime = null;
 const options = {
     enableTime: true,
     time_24hr: true,
@@ -18,24 +18,26 @@ const options = {
     onClose(selectedDates) {
         if(new Date() > selectedDates[0]){
             Notiflix.Notify.failure('Please choose a date in the future');
-            return
-        }
-        btnStartEl.disabled = false;
-        btnStartEl.addEventListener('click', () => {
-        const intervalId = setInterval(() => {
             btnStartEl.disabled = true;
-            const deltaTime = selectedDates[0] - new Date();
-            if(deltaTime <= 0){
-                Notiflix.Report.success('От і все', 'Чекайте наступних стартів', 'Дякуємо, що були з нами');
-                clearInterval(intervalId)
-                return
-            }
-            tablo(convertMs(deltaTime));
-        }, 1000)}
-        )
+        } else {
+            btnStartEl.disabled = false;
+            chosenTime = selectedDates[0];
+        }
     },};
-    
 flatpickr(calendarEl, options);
+    
+btnStartEl.addEventListener('click', timer);
+    
+function timer() {
+    const intervalId = setInterval(() => {
+        btnStartEl.disabled = true;
+        const deltaTime = chosenTime - new Date();
+        tablo(convertMs(deltaTime));
+        if(deltaTime <= 999){
+            Notiflix.Report.success('The end', 'Wait for new starts', '😉');
+            clearInterval(intervalId);
+        }
+    }, 1000)}
 
 function addLeadingZero(value){
     return String(value).padStart(2, '0');
